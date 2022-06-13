@@ -20,15 +20,13 @@ public class CoafService {
     public Object sendComunication()throws Exception{
         String xmlFileSystem = XMLUtils.readXML(FileSystemUtils.getOcorrenciaPath());
         String signedXML = signatureXMLA3Service.applySignature(xmlFileSystem, applicationProperties.getPasswordPfx());
-        String result = new ComunicacaoService_Service().getComunicacaoServicePort().enviarLoteComunicacao(signedXML);
-        return result;
+        return new ComunicacaoService_Service().getComunicacaoServicePort().enviarLoteComunicacao(signedXML);
     }
 
     public Object getReceipt()throws Exception{
         String xmlFileSystem = XMLUtils.readXML(FileSystemUtils.getReceiptPath());
         String signedXML = signatureXMLA3Service.applySignature(xmlFileSystem, applicationProperties.getPasswordPfx());
-        String result = new ComunicacaoService_Service().getComunicacaoServicePort().enviarLoteComunicacao(signedXML);
-        return result;
+        return new ComunicacaoService_Service().getComunicacaoServicePort().enviarLoteComunicacao(signedXML);
     }
 
 }

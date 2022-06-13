@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class XMLUtils {
@@ -34,7 +36,7 @@ public class XMLUtils {
     public static String readXML(String fileXML) throws IOException {
         String linha = "";
         StringBuilder xml = new StringBuilder();
-        BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileXML)));
+        BufferedReader in = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(fileXML))));
         while ((linha = in.readLine()) != null) {
             xml.append(linha);
         }
@@ -46,21 +48,18 @@ public class XMLUtils {
             IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        Document document = factory.newDocumentBuilder().parse(
-                new ByteArrayInputStream(xml.getBytes()));
-        return document;
+        return factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes()));
     }
 
     public static ArrayList<Transform> createTransformListFrom(XMLSignatureFactory signatureFactory) throws Exception {
-        ArrayList<Transform> transformList = new ArrayList<Transform>();
-        TransformParameterSpec tps = null;
-        Transform envelopedTransform = signatureFactory.newTransform(
-                Transform.ENVELOPED, tps);
-        Transform c14NTransform = signatureFactory.newTransform(
-                "http://www.w3.org/TR/2001/REC-xml-c14n-20010315", tps);
+        ArrayList<Transform> transformList = new ArrayList<>();
+
+        Transform envelopedTransform = signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null);
+        Transform c14NTransform = signatureFactory.newTransform("http://www.w3.org/TR/2001/REC-xml-c14n-20010315", (TransformParameterSpec) null);
 
         transformList.add(envelopedTransform);
         transformList.add(c14NTransform);
+
         return transformList;
     }
 
